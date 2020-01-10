@@ -4,19 +4,27 @@ import { useQuerystringParam } from '../utils/useQuerystring';
 
 function Businesses() {
   const [searchParam, setSearchParam] = useQuerystringParam('search', '');
-  const [limitParam, setLimitParam] = useQuerystringParam('limit', 5);
+  const [limitParam, setLimitParam] = useQuerystringParam(
+    'limit',
+    5,
+    {
+      parse: x => {
+        const int = parseInt(x, 10);
+        if (isNaN(int)) return undefined; // default
+        return int < 0 ? undefined : int;
+      },
+      serialize: x => String(Math.max(x || 0, 0))
+    }
+  );
 
-  const safeLimit = Math.max(parseInt(limitParam, 10) || 0, 0);
-  const range = new Array(safeLimit).fill(undefined);
+  const range = new Array(limitParam).fill(undefined);
 
   const updateSearch = (event) => {
-    const value = event.target.value;
-    setSearchParam(value);
+    setSearchParam(event.target.value);
   };
 
   const updateLimit = (event) => {
-    const value = parseInt(event.target.value, 10);
-    setLimitParam(value);
+    setLimitParam(event.target.value);
   };
 
   return (
