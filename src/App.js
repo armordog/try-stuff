@@ -14,22 +14,15 @@ import Offers from './offers/offers';
 
 import routes from './routes';
 
-
-const activeNavStyle = {
-  textDecoration: 'underline',
-  fontWeight: 'bold'
-};
-
-
 function App() {
   return (
     <div className="App">
       <ul>
         <li>
-          <NavLink activeStyle={activeNavStyle} to={routes.businesses.path}>Businesses</NavLink>
+          <NavLink to={routes.businesses.path}>Businesses</NavLink>
         </li>
         <li>
-          <NavLink activeStyle={activeNavStyle} to={routes.offers.path}>Offers</NavLink>
+          <NavLink to={routes.offers.path}>Offers</NavLink>
         </li>
       </ul>
       <div>

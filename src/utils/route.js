@@ -1,7 +1,7 @@
 import pathToRegexp from 'path-to-regexp';
 
 class Route {
-  constructor({path}) {
+  constructor({ path }) {
     this.path = path;
     this.generate = pathToRegexp.compile(path);
   }

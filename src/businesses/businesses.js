@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import routes from '../routes';
 import { useQuerystringParam } from '../utils/useQuerystring';
+import useRouteBuilder from '../utils/useRouteBuilder';
+
 
 function Businesses() {
   const [searchParam, setSearchParam] = useQuerystringParam('search', '');
@@ -27,21 +30,30 @@ function Businesses() {
     setLimitParam(event.target.value);
   };
 
+  const businessRouteBuilder = useRouteBuilder(routes.business);
+
   return (
     <>
       <h1>Businesses</h1>
-      <label>
-        Search
-        <input type='text' value={searchParam} onChange={updateSearch}/>
-      </label>
-      <label>
-        Range
-        <input type='number' value={limitParam} onChange={updateLimit}/>
-      </label>
+      <div>
+        <label>
+          Search
+          <input type='text' value={searchParam} onChange={updateSearch}/>
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Range
+          <input type='number' value={limitParam} onChange={updateLimit}/>
+        </label>
+      </div>
       <ul>
         {range.map((_, index) => (
           <li key={index}>
-            <Link to={`/businesses/${searchParam}${index}`}>{`${searchParam}${index}`}</Link>
+            <Link to={() => businessRouteBuilder({ businessId: `${searchParam}${index}` })}>
+              {`${searchParam}${index}`}
+            </Link>
           </li>
         ))}
       </ul>
