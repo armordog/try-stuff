@@ -22,13 +22,9 @@ function Businesses() {
 
   const range = new Array(limitParam).fill(undefined);
 
-  const updateSearch = (event) => {
-    setSearchParam(event.target.value);
-  };
+  const updateSearch = event => setSearchParam(event.target.value);
 
-  const updateLimit = (event) => {
-    setLimitParam(event.target.value);
-  };
+  const updateLimit = event => setLimitParam(event.target.value);
 
   const businessRouteBuilder = useRouteBuilder(routes.business);
 
@@ -51,7 +47,7 @@ function Businesses() {
       <ul>
         {range.map((_, index) => (
           <li key={index}>
-            <Link to={() => businessRouteBuilder({ businessId: `${searchParam}${index}` })}>
+            <Link to={() => businessRouteBuilder({ businessId: `${searchParam}${index}` }, {preserveQuerystring: true})}>
               {`${searchParam}${index}`}
             </Link>
           </li>

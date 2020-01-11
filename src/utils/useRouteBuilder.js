@@ -1,10 +1,14 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 const useRouteBuilder = (route) => {
   const oldParams = useParams();
+  const location = useLocation();
 
-  return (params) => {
-    return route.generate(Object.assign({}, oldParams, params));
+  return (params, { preserveQuerystring = false } = {}) => {
+    const baseRoute = route.generate(Object.assign({}, oldParams, params));
+    return preserveQuerystring
+      ? `${baseRoute}${location.search}`
+      : baseRoute;
   };
 };
 

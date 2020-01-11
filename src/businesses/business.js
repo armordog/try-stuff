@@ -20,10 +20,10 @@ function Business() {
       <h1>Business {businessId}</h1>
       <ul>
         <li>
-          <NavLink to={businessOffersRouteBuilder()}>Offers</NavLink>
+          <NavLink to={businessOffersRouteBuilder()} replace>Offers</NavLink>
         </li>
         <li>
-          <NavLink to={businessStatsRouteBuilder()}>Stats</NavLink>
+          <NavLink to={businessStatsRouteBuilder()} replace>Stats</NavLink>
         </li>
       </ul>
       <Switch>
@@ -34,7 +34,9 @@ function Business() {
           <BusinessStats/>
         </Route>
         <Route>
-          <Redirect to={businessStatsRouteBuilder()}/>
+          <p><i>Please select a tab</i></p>
+          <p><small>This is here so we have a dynamic landing point.</small></p>
+          <p><small>We could easily put a Redirect to <code>businessOffersRouteBuilder()</code></small></p>
         </Route>
       </Switch>
     </>
