@@ -43,14 +43,23 @@ function useQuerystring() {
  *
  * @param param:String - query parameter name
  * @param defaultValue:any - value to return when param not set in querystring
- * @param serialize:(T)=>String - (optional) serialize to querystring param
- * @param parse:(String)=>T - (optional) parse querystring param to value (return undefined to use defaultValue)
+ * @param options.serialize:(T)=>String - (optional) serialize to querystring param
+ * @param options.parse:(String)=>T - (optional) parse querystring param to value (return undefined to use defaultValue)
+ * @param options.squash:Boolean - (optional) remove param from querystring when it matches the default value
  * @returns [
  *   T,
  *   (T)=>void
  * ]
  */
-function useQuerystringParam(param, defaultValue, { serialize = identity, parse = identity } = {}) {
+function useQuerystringParam(
+  param,
+  defaultValue,
+  {
+    serialize = identity,
+    parse = identity,
+    squash
+  } = {}
+) {
   const [qs, updateQs] = useQuerystring();
 
   const actualValue = qs[param];
@@ -60,13 +69,34 @@ function useQuerystringParam(param, defaultValue, { serialize = identity, parse 
     : defaultValue;
 
   const update = (newValue) => {
-    updateQs({ [param]: serialize(newValue) });
+    if (newValue === value) return;
+    const serialized = squash && (newValue === defaultValue)
+      ? undefined
+      : serialize(newValue);
+    updateQs({ [param]: serialized });
   };
 
   return [value, update];
 }
 
+const transport = {
+  boolean: {
+    parse: it => it === 'true',
+    serialize: String
+  },
+  naturalNumber: {
+    parse: it => {
+      const int = parseInt(it, 10);
+      if (isNaN(int)) return undefined;
+      if (int < 0) return undefined;
+      return int;
+    },
+    serialize: it => String(Math.max(it || 0, 0))
+  }
+};
+
 export {
   useQuerystring,
-  useQuerystringParam
+  useQuerystringParam,
+  transport
 };

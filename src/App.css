@@ -17,6 +17,6 @@
     color: #61dafb;
 }
 
-a.active {
+.active {
     font-weight: bold;
 }

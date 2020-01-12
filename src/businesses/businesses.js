@@ -1,22 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../routes';
-import { useQuerystringParam } from '../utils/useQuerystring';
+import {
+  transport,
+  useQuerystringParam
+} from '../utils/useQuerystring';
 import useRouteBuilder from '../utils/useRouteBuilder';
 
 
 function Businesses() {
-  const [searchParam, setSearchParam] = useQuerystringParam('search', '');
+  const [searchParam, setSearchParam] = useQuerystringParam('search', '', {squash: true});
   const [limitParam, setLimitParam] = useQuerystringParam(
     'limit',
     5,
     {
-      parse: x => {
-        const int = parseInt(x, 10);
-        if (isNaN(int)) return undefined; // default
-        return int < 0 ? undefined : int;
-      },
-      serialize: x => String(Math.max(x || 0, 0))
+      parse: transport.naturalNumber.parse,
+      serialize: transport.naturalNumber.serialize
     }
   );
 
@@ -24,7 +23,11 @@ function Businesses() {
 
   const updateSearch = event => setSearchParam(event.target.value);
 
-  const updateLimit = event => setLimitParam(event.target.value);
+  const updateLimit = event => setLimitParam(
+    // Even though we don't _need_ to parseInt here,
+    // updateLimit is technically expecting a number
+    parseInt(event.target.value, 10)
+  );
 
   const businessRouteBuilder = useRouteBuilder(routes.business);
 
