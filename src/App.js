@@ -10,8 +10,8 @@ import './App.css';
 
 import Business from './businesses/business';
 import Businesses from './businesses/businesses';
+import Flags from './flags/flags';
 import Offers from './offers/offers';
-
 import routes from './routes';
 
 function App() {
@@ -35,6 +35,9 @@ function App() {
           </Route>
           <Route path={routes.offers.path}>
             <Offers/>
+          </Route>
+          <Route path={routes.flags.path}>
+            <Flags/>
           </Route>
           <Route>
             <Redirect to={routes.businesses.path}/>
