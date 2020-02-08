@@ -20,3 +20,12 @@
 .active {
     font-weight: bold;
 }
+
+.nav {
+    display: flex;
+}
+
+.nav > li {
+    list-style: none;
+    margin: 0 1em;
+}

@@ -1,0 +1,88 @@
+.c-stepper {
+    display: flex;
+    padding: 0;
+    align-items: flex-start;
+}
+
+.c-stepper_step {
+    flex-grow: 1;
+    flex-shrink: 1;
+    /*overflow: hidden;*/
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-basis: 0;
+    min-width: 0;
+}
+
+.c-step_label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    text-overflow: ellipsis;
+    color: black;
+}
+
+.c-step_main {
+    justify-items: center;
+    display: flex;
+    align-items: center;
+}
+
+.c-step_icon {
+    text-align: center;
+    line-height: 2em;
+    position: relative;
+    width: 2em;
+    height: 2em;
+    background-color: #333;
+    border-radius: 50%;
+    color: white;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.c-step_main:before {
+    content: "";
+    width: 100%;
+    height: 0;
+    border: 2px solid #333;
+}
+
+.c-step_main:after {
+    content: "";
+    width: 100%;
+    height: 0;
+    border: 2px solid #333;
+}
+
+.c-stepper_step--active {
+    font-weight: bold;
+    flex-shrink: 0;
+    min-width: auto;
+}
+
+.c-stepper_step--active ~ * .c-step_icon {
+    background-color: #999;
+}
+
+.c-stepper_step:first-child .c-step_main:before {
+    border-color: transparent;
+}
+
+.c-stepper_step:last-child .c-step_main:after {
+    border-color: transparent;
+}
+
+.c-stepper_step--active .c-step_main:after, .c-stepper_step--active ~ * .c-step_main:after {
+    border-color: #999;
+}
+
+.c-stepper_step--active ~ .c-stepper_step .c-step_main:before {
+    border-color: #999;
+}
+
+.c-stepper_step--active ~ * .c-step_label {
+    color: #999;
+}
+
