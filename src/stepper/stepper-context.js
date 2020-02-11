@@ -1,18 +1,27 @@
 import React, {
   useCallback,
   useEffect,
+  useRef,
   useState
 } from 'react';
 
 import { StepProvider } from './step-context';
 
-function StepperContext({ children, containerRef }) {
+const findScrollParent = (el) => {
+  if(!el) return null;
+  const style = window.getComputedStyle(el);
+  if(style.overflow !== "hidden" && style.overflow !== "visible") return el;
+  return findScrollParent(el.parentElement);
+};
+
+function StepperContext({ children }) {
   const [steps, setSteps] = useState([]);
   const [active, setActive] = useState(0);
+  const containerRef = useRef();
 
   const scrollHandler = useCallback(event => {
     let topIndex = 0;
-    let highest = Infinity;
+    let distance = Infinity;
     steps
       /* This seems weird but when a step is removed the scrollHandler can still
        * run once before `steps` is updated and the removed ref's current will
@@ -21,9 +30,10 @@ function StepperContext({ children, containerRef }) {
       .filter(step => step.ref.current)
       .map(step => step.ref.current.offsetTop - containerRef.current.scrollTop)
       .forEach((top, index) => {
-        if(top > 0 && top < highest) {
+        const currentDistance = Math.abs(top);
+        if(currentDistance < distance) {
           topIndex = index;
-          highest = top;
+          distance = currentDistance;
         }
       });
 
@@ -32,13 +42,16 @@ function StepperContext({ children, containerRef }) {
 
   useEffect(
     () => {
-      const element = containerRef.current;
-      element.addEventListener('scroll', scrollHandler);
+      if(!steps.length) return;
+
+      containerRef.current = findScrollParent(steps[0].ref.current);
+      // const element = containerRef.current;
+      containerRef.current.addEventListener('scroll', scrollHandler);
       return () => {
-        element.removeEventListener('scroll', scrollHandler);
+        containerRef.current.removeEventListener('scroll', scrollHandler);
       }
     },
-    [scrollHandler]
+    [scrollHandler, steps]
   );
 
   const register = useCallback(step => {
@@ -51,8 +64,12 @@ function StepperContext({ children, containerRef }) {
     setSteps(prevSteps => prevSteps.filter(step => step.id !== id));
   }, [steps, setSteps]);
 
+  const scrollTo = useCallback(index => {
+    steps[index].ref.current.scrollIntoView()
+  }, [steps]);
+
   return (
-    <StepProvider value={{ steps, active, setActive, register, unregister }}>
+    <StepProvider value={{ steps, active, setActive, scrollTo, register, unregister }}>
       {children}
     </StepProvider>
   );

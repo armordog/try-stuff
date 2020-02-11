@@ -3,7 +3,7 @@ import './stepper.css';
 import StepContext from './step-context';
 
 function Stepper({clickToJump}) {
-  const {steps, active, setActive}  = useContext(StepContext);
+  const {steps, active, scrollTo}  = useContext(StepContext);
   return (
     <ul className={'c-stepper'}>
       {
@@ -11,7 +11,7 @@ function Stepper({clickToJump}) {
           <li
             key={index}
             className={`c-stepper_step ${index === active ? 'c-stepper_step--active' : ''}`}
-            onClick={clickToJump ? () => setActive(index) : null}
+            onClick={clickToJump ? () => scrollTo(index) : null}
           >
             <div className={'c-step_main'}>
               <div className={'c-step_icon'}>
